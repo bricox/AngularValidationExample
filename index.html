@@ -1,0 +1,58 @@
+<html>
+<head>
+    <script src="/lib/angular/angular.js"></script>
+    <script src="/lib/validatorjs/validator.js" ></script>
+</head>
+<body ng-app="validatorApp">
+    <div ng-controller="validatorController as vm">
+        <div ng-if="vm.getErrors('firstName')">{{vm.getErrors('firstName')}}</div>
+        First Name: <input type="text" ng-model="vm.person.firstName">
+        
+        <div ng-if="vm.getErrors('lastName')">{{vm.getErrors('lastName')}}</div>
+        Last Name: <input type="text" ng-model="vm.person.lastName">
+        </div>
+    
+</body>    
+
+<script type="text/javascript">
+    angular.module('validatorApp', [])
+    
+    .factory('validatorFactory', function(){
+        var personValidation = {
+            firstName: 'required',
+            lastName: 'required'
+        };
+        
+        var messages = {
+            required: 'Required Field'
+        }
+        
+        return {getErrors: getErrors};
+        
+        
+        function getErrors(key, value){
+            var validation = new Validator(value, personValidation, messages);               
+            console.log(validation.passes());
+            console.log(validation.errors.all());
+            return validation.errors.first(key);
+        }
+    })
+    
+    .controller('validatorController', ['validatorFactory', function(validatorFactory){
+        var self = this;
+        
+        self.person = {
+            firstName: '',
+            lastName: "Cox"
+        };
+                
+        self.getErrors = function getErrors(key){
+            //value to verify
+            console.log('verifying ' + key);
+            return validatorFactory.getErrors(key, self.person);
+        };        
+        
+    }]);
+    
+</script>
+</html>

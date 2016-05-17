@@ -1,0 +1,35 @@
+{
+  "name": "validatorjs",
+  "version": "2.0.6",
+  "homepage": "https://github.com/skaterdav85/validatorjs",
+  "authors": [
+    "David Tang"
+  ],
+  "description": "Validation library based on Laravel's Validator class",
+  "main": "dist/validator.js",
+  "keywords": [
+    "validation",
+    "node",
+    "laravel",
+    "validator"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "Gruntfile.js",
+    "spec",
+    "lib"
+  ],
+  "_release": "2.0.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.0.6",
+    "commit": "7efbea93198b63f4b21445931223c771a9937536"
+  },
+  "_source": "https://github.com/skaterdav85/validatorjs.git",
+  "_target": "^2.0.6",
+  "_originalSource": "validatorjs",
+  "_direct": true
+}

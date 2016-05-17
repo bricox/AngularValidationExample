@@ -1,0 +1,28 @@
+{
+  "name": "angularvalidationexample",
+  "description": "A test project to work out validation using an angular directive and no dependencies on a form validation when checking the object.\"",
+  "main": "index.js",
+  "authors": [
+    "Brian Cox"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "angular",
+    "validation"
+  ],
+  "homepage": "https://github.com/bricox/AngularValidationExample",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "validatorjs": "^2.0.6",
+    "angular": "^1.5.5"
+  },
+  "install": {
+    "path": "lib"
+  }
+}
