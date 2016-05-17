@@ -5,13 +5,16 @@
 </head>
 <body ng-app="validatorApp">
     <div ng-controller="validatorController as vm">
-        <div ng-if="vm.getErrors('firstName')">{{vm.getErrors('firstName')}}</div>
-        First Name: <input type="text" ng-model="vm.person.firstName">
+        <div ng-if="vm.getErrors('firstName')">{{vm.getErrors('firstName')}}</div>        
+        First Name: <input type="text" ng-model="vm.person.firstName"/>
         
         <div ng-if="vm.getErrors('lastName')">{{vm.getErrors('lastName')}}</div>
-        Last Name: <input type="text" ng-model="vm.person.lastName">
-        </div>
-    
+        Last Name: <input type="text" ng-model="vm.person.lastName"/>
+                
+        <validator-directive ng-model="vm.person.firstName" label="First Name:" key="firstName"></validator-directive>
+    </div>
+        
+        
 </body>    
 
 <script type="text/javascript">
@@ -32,10 +35,34 @@
         
         function getErrors(key, value){
             var validation = new Validator(value, personValidation, messages);               
-            console.log(validation.passes());
-            console.log(validation.errors.all());
+            validation.passes()
+            //console.log(validation.passes());
+            //console.log(validation.errors.all());
             return validation.errors.first(key);
         }
+    })
+    
+    .directive('validatorDirective', function(){
+        return{
+            scope: {
+                ngModel: '=',
+                label: '@',
+                key: '@'
+            },
+            templateUrl: 'templates/input.html',
+            bindToController: true,
+            controllerAs: 'vm',
+            controller: ['validatorFactory', function(validatorFactory){
+                var self = this;
+                
+                self.getErrors = function getErrors(){
+                    debugger;
+                    //value to verify
+                    console.log('verifying!!! ' + self.key);
+                    return validatorFactory.getErrors(self.key, self.ngModel);
+                };        
+            }]  
+        };
     })
     
     .controller('validatorController', ['validatorFactory', function(validatorFactory){
@@ -48,7 +75,7 @@
                 
         self.getErrors = function getErrors(key){
             //value to verify
-            console.log('verifying ' + key);
+            //console.log('verifying ' + key);
             return validatorFactory.getErrors(key, self.person);
         };        
         
