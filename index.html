@@ -5,13 +5,13 @@
 </head>
 <body ng-app="validatorApp">
     <div ng-controller="validatorController as vm">
-        <div ng-if="vm.getErrors('firstName')">{{vm.getErrors('firstName')}}</div>        
-        First Name: <input type="text" ng-model="vm.person.firstName"/>
+        <!--<div ng-if="vm.getErrors('firstName')">{{vm.getErrors('firstName')}}</div>        
+        First Name: <input type="text" ng-model="vm.person.firstName"/>-->
         
         <div ng-if="vm.getErrors('lastName')">{{vm.getErrors('lastName')}}</div>
         Last Name: <input type="text" ng-model="vm.person.lastName"/>
                 
-        <validator-directive ng-model="vm.person.firstName" label="First Name:" key="firstName"></validator-directive>
+        <validator-directive ng-model="vm.person.firstName" validation="vm.validations.firstName" label="First Name:" ></validator-directive>
     </div>
         
         
@@ -30,24 +30,42 @@
             required: 'Required Field'
         }
         
-        return {getErrors: getErrors};
+        return {getErrors: getErrors,
+            getValidations: getValidations,
+            getErrorsByRule, getErrorsByRule};
         
         
         function getErrors(key, value){
             var validation = new Validator(value, personValidation, messages);               
             validation.passes()
-            //console.log(validation.passes());
-            //console.log(validation.errors.all());
+            
             return validation.errors.first(key);
+        }
+        
+        function getErrorsByRule(rule, value){
+            var validation = new Validator(
+                {myItem: value},
+                {myItem: rule},
+                messages
+            );
+            
+            validation.passes();
+            
+            return validation.errors.all();
+        }
+        
+        function getValidations(){
+            return personValidation;
         }
     })
     
-    .directive('validatorDirective', function(){
+    .directive('validatorDirective', ['validatorFactory', function(validatorFactory){
         return{
             scope: {
                 ngModel: '=',
                 label: '@',
-                key: '@'
+                validation: '=',
+                errors: '=?'
             },
             templateUrl: 'templates/input.html',
             bindToController: true,
@@ -55,15 +73,19 @@
             controller: ['validatorFactory', function(validatorFactory){
                 var self = this;
                 
-                self.getErrors = function getErrors(){
-                    debugger;
-                    //value to verify
-                    console.log('verifying!!! ' + self.key);
-                    return validatorFactory.getErrors(self.key, self.ngModel);
-                };        
-            }]  
+                     
+            }],
+            link: function(scope, element, attrs) {
+                
+                element.find('input').on('blur', function(){
+                   console.log('testing');
+                   
+                   scope.vm.errors =  validatorFactory.getErrorsByRule(scope.vm.validation, scope.vm.ngModel);
+                   scope.$apply();
+                });
+            }  
         };
-    })
+    }])
     
     .controller('validatorController', ['validatorFactory', function(validatorFactory){
         var self = this;
@@ -72,6 +94,8 @@
             firstName: '',
             lastName: "Cox"
         };
+        
+        self.validations = validatorFactory.getValidations();
                 
         self.getErrors = function getErrors(key){
             //value to verify
